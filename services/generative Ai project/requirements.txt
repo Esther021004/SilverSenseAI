@@ -1,0 +1,31 @@
+# 최신 LangChain 패키지 세트 (1.x 기반)
+# 중요: langchain-core는 1.0.0 이상이어야 함
+langchain-core>=1.1.0,<2.0.0
+langchain-openai>=1.1.0
+langchain-community>=0.3.0,<2.0.0
+langchain-text-splitters>=0.2.0,<2.0.0
+langsmith>=0.1.0
+
+# OpenAI
+openai>=2.0.0
+
+# 벡터 스토어
+chromadb>=0.4.22
+
+# 임베딩
+sentence-transformers>=2.3.1
+
+# PDF 처리
+pypdf>=4.0.1
+pdfplumber>=0.10.3
+
+# 유틸리티
+python-dotenv>=1.0.0
+numpy>=1.26.0
+
+# Google Gemini (무료)
+# langchain-community에 포함되어 있음 (별도 패키지 불필요)
+# google-generativeai만 설치하면 됨
+# protobuf는 5.x 사용 (mediapipe 충돌 무시 - 이 프로젝트에서 사용 안 함)
+protobuf>=5.0,<6.0
+google-generativeai>=0.3.0

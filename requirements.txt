@@ -1,0 +1,23 @@
+fastapi
+uvicorn[standard]
+pydantic
+httpx
+google-generativeai
+python-dotenv
+torch
+librosa
+numpy
+moviepy
+python-multipart
+openai-whisper
+
+# RAG system dependencies
+langchain-core>=1.1.0,<2.0.0
+langchain-community>=0.3.0,<2.0.0
+langchain-text-splitters>=0.2.0,<2.0.0
+langchain-openai>=1.1.0
+chromadb>=0.4.22
+sentence-transformers>=2.3.1
+pypdf>=4.0.1
+pdfplumber>=0.10.3
+protobuf>=5.0,<6.0

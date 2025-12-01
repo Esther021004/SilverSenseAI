@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SilverSense AI - 응급 상황 분석</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Malgun Gothic', sans-serif;
+      background: linear-gradient(135deg, #FFE5F1 0%, #E8D5FF 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      max-width: 500px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      text-align: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 30px;
+    }
+
+    .logo-icon {
+      width: 50px;
+      height: 50px;
+    }
+
+    .logo-text {
+      display: flex;
+      align-items: baseline;
+    }
+
+    .logo-text-main {
+      font-size: 28px;
+      font-weight: bold;
+      color: #1e293b;
+      letter-spacing: -0.5px;
+    }
+
+    .logo-text-ai {
+      font-size: 24px;
+      font-weight: bold;
+      color: #A78BFA;
+      margin-left: 4px;
+    }
+
+    h1 {
+      font-size: 24px;
+      color: #1a1a1a;
+      margin-bottom: 20px;
+    }
+
+    .info {
+      background: #f8f9fa;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 20px 0;
+      text-align: left;
+    }
+
+    .info-item {
+      margin-bottom: 10px;
+      font-size: 14px;
+      color: #666;
+    }
+
+    .info-item strong {
+      color: #1a1a1a;
+    }
+
+    .start-btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 15px 40px;
+      font-size: 18px;
+      font-weight: 600;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-top: 20px;
+      width: 100%;
+    }
+
+    .start-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    .loading {
+      display: none;
+      margin-top: 20px;
+    }
+
+    .loading.show {
+      display: block;
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #667eea;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 20px auto;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">
+      <svg class="logo-icon" width="50" height="50" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="silverSenseGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#FF8FAB;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#A78BFA;stop-opacity:1" />
+          </linearGradient>
+        </defs>
+        <rect width="40" height="40" rx="12" fill="url(#silverSenseGradient)" />
+        <path 
+          d="M10 20 H14 L17 12 L23 28 L27 20 H30" 
+          stroke="white" 
+          stroke-width="3" 
+          stroke-linecap="round" 
+          stroke-linejoin="round" 
+          fill="none"
+        />
+      </svg>
+      <div class="logo-text">
+        <span class="logo-text-main">SilverSense</span>
+        <span class="logo-text-ai">AI</span>
+      </div>
+    </div>
+
+    <h1>응급 상황 분석 서비스</h1>
+
+    <div class="info">
+      <div class="info-item">
+        <strong>서비스 설명:</strong> 음성/영상 파일을 업로드하여 응급 상황을 분석하고 대처 방법을 안내받을 수 있습니다.
+      </div>
+      <div class="info-item">
+        <strong>사용 방법:</strong> 아래 버튼을 클릭하여 서비스를 시작하세요.
+      </div>
+    </div>
+
+    <button class="start-btn" onclick="startService()">서비스 시작하기</button>
+
+    <div class="loading" id="loading">
+      <div class="spinner"></div>
+      <p style="color: #666; margin-top: 10px;">서비스 로딩 중...</p>
+    </div>
+  </div>
+
+  <script>
+    // ngrok API URL (현재 ngrok URL로 자동 설정)
+    // URL 파라미터에서 가져오거나, 기본값 사용
+    const urlParams = new URLSearchParams(window.location.search);
+    const API_URL = urlParams.get('api') || 'https://snuffly-unslagged-nubia.ngrok-free.dev';
+
+    function startService() {
+      const loading = document.getElementById('loading');
+      loading.classList.add('show');
+
+      // /app 경로로 리다이렉트
+      setTimeout(() => {
+        window.location.href = '/app';
+      }, 500);
+    }
+
+    // 페이지 로드 시 API 상태 확인
+    window.addEventListener('load', async () => {
+      try {
+        const response = await fetch(`${API_URL}/docs`, { mode: 'no-cors' });
+        console.log('API 서버 연결 확인');
+      } catch (error) {
+        console.log('API 서버 확인 중...');
+      }
+    });
+  </script>
+</body>
+</html>
+

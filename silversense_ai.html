@@ -1,0 +1,1925 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SilverSense AI</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Malgun Gothic', sans-serif;
+      background: #f5f5f5;
+      color: #1a1a1a;
+      line-height: 1.6;
+    }
+
+    .page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* 상단 바 */
+    .top-bar {
+      background: white;
+      border-bottom: 1px solid #e0e0e0;
+      padding: 12px 20px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .top-brand {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      flex-shrink: 0;
+      margin-top: 11px;
+      margin-left: 7px;
+    }
+
+    .logo-text {
+      display: flex;
+      align-items: baseline;
+    }
+
+    .logo-text-main {
+      font-size: 20px;
+      font-weight: bold;
+      color: #1e293b;
+      letter-spacing: -0.5px;
+    }
+
+    .logo-text-ai {
+      font-size: 20px;
+      font-weight: bold;
+      background: linear-gradient(135deg, #FF1493 0%, #A78BFA 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-left: 4px;
+    }
+
+    /* 히어로 영역 */
+    .hero {
+      background: linear-gradient(135deg, #FFE5F1 0%, #E8D5FF 100%);
+      padding: 60px 20px;
+      text-align: center;
+    }
+
+    .hero-inner {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .hero-title {
+      font-size: 32px;
+      font-weight: 700;
+      line-height: 1.4;
+      margin-bottom: 16px;
+      color: #1a1a1a;
+    }
+
+    .accent {
+      color: #764ba2;
+    }
+
+    .hero-subtitle {
+      font-size: 16px;
+      color: #555;
+      line-height: 1.8;
+    }
+
+    /* 메인 카드 */
+    .main {
+      flex: 1;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      width: 100%;
+    }
+
+    .main-card {
+      background: white;
+      border-radius: 16px;
+      padding: 32px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      margin-bottom: 24px;
+    }
+
+    .main-card-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .main-card-icon {
+      font-size: 32px;
+      line-height: 1;
+    }
+
+    .main-card-text h2 {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #1a1a1a;
+    }
+
+    .main-card-text p {
+      font-size: 14px;
+      color: #666;
+    }
+
+    /* 업로드 영역 */
+    .upload-area {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .file-label {
+      display: inline-block;
+      padding: 16px 24px;
+      background: #f8f9fa;
+      border: 2px dashed #ccc;
+      border-radius: 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 16px;
+      color: #555;
+    }
+
+    .file-label:hover {
+      background: #e9ecef;
+      border-color: #A78BFA;
+    }
+
+    .file-label input[type="file"] {
+      display: none;
+    }
+
+    .primary-btn {
+      padding: 16px 24px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .primary-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    .primary-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .status-text {
+      font-size: 14px;
+      color: #666;
+      margin-top: 12px;
+      min-height: 20px;
+    }
+
+    /* 가이드 박스 */
+    .guide-box {
+      background: #f8f9fa;
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 24px;
+    }
+
+    .guide-box h3 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: #1a1a1a;
+    }
+
+    .guide-box ul {
+      list-style: none;
+      padding-left: 0;
+      margin-bottom: 16px;
+    }
+
+    .guide-box ul li {
+      padding: 8px 0;
+      padding-left: 24px;
+      position: relative;
+      font-size: 14px;
+      color: #555;
+      line-height: 1.6;
+    }
+
+    .guide-box ul li:before {
+      content: "•";
+      position: absolute;
+      left: 8px;
+      color: #A78BFA;
+      font-weight: bold;
+    }
+
+    .guide-warning {
+      font-size: 12px;
+      color: #888;
+      line-height: 1.6;
+      padding-top: 12px;
+      border-top: 1px solid #e0e0e0;
+    }
+
+    /* 로딩 카드 */
+    .loading-card {
+      background: white;
+      border-radius: 16px;
+      padding: 48px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      margin-bottom: 24px;
+    }
+
+    .loading-card.hidden {
+      display: none;
+    }
+
+    .spinner {
+      width: 48px;
+      height: 48px;
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #667eea;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 24px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .loading-text {
+      text-align: center;
+    }
+
+    .loading-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin-bottom: 8px;
+    }
+
+    .loading-sub {
+      font-size: 14px;
+      color: #666;
+    }
+
+    /* 결과 영역 */
+    .result-wrapper {
+      background: white;
+      border-radius: 16px;
+      padding: 32px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      margin-bottom: 24px;
+    }
+
+    .result-wrapper.hidden {
+      display: none;
+    }
+
+    .emergency-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid #e0e0e0;
+    }
+
+    .emergency-label {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+
+    .emergency-badge {
+      padding: 6px 16px;
+      background: #f8f9fa;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #555;
+    }
+
+    .emergency-badge.high {
+      background: #fee;
+      color: #c33;
+    }
+
+    .emergency-badge.medium {
+      background: #fff4e6;
+      color: #d97706;
+    }
+
+    .emergency-badge.low {
+      background: #e6f7ff;
+      color: #1890ff;
+    }
+
+    .result-summary {
+      margin-bottom: 32px;
+    }
+
+    .result-summary h3 {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: #1a1a1a;
+    }
+
+    .result-summary ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .result-summary ul li {
+      padding: 8px 0;
+      padding-left: 24px;
+      position: relative;
+      font-size: 14px;
+      color: #555;
+      line-height: 1.6;
+    }
+
+    .result-summary ul li:before {
+      content: "✓";
+      position: absolute;
+      left: 8px;
+      color: #A78BFA;
+      font-weight: bold;
+    }
+
+    /* 3단계 카드 그리드 */
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+
+    .step-card {
+      background: #f8f9fa;
+      border-radius: 12px;
+      padding: 24px;
+      border: 2px solid transparent;
+      transition: all 0.3s;
+    }
+
+    .step-card:hover {
+      border-color: #A78BFA;
+      transform: translateY(-2px);
+    }
+
+    .step-icon {
+      font-size: 32px;
+      margin-bottom: 12px;
+    }
+
+    .step-card h3 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: #1a1a1a;
+    }
+
+    .step-card ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .step-card ul li {
+      padding: 8px 0;
+      padding-left: 20px;
+      position: relative;
+      font-size: 14px;
+      color: #555;
+      line-height: 1.6;
+    }
+
+    .step-card ul li:before {
+      content: "→";
+      position: absolute;
+      left: 0;
+      color: #A78BFA;
+    }
+
+    .reset-btn {
+      width: 100%;
+      padding: 16px;
+      background: #f8f9fa;
+      border: 2px solid #e0e0e0;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      color: #555;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .reset-btn:hover {
+      background: #e9ecef;
+      border-color: #A78BFA;
+      color: #A78BFA;
+    }
+
+    /* TTS 버튼 */
+    .tts-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 24px;
+      padding: 16px;
+      background: #f8f9fa;
+      border-radius: 12px;
+    }
+
+    .tts-voice-select {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .tts-voice-select label {
+      font-size: 14px;
+      font-weight: 600;
+      color: #555;
+    }
+
+    .tts-voice-select select {
+      flex: 1;
+      padding: 8px 12px;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 14px;
+      background: white;
+      color: #1a1a1a;
+      cursor: pointer;
+    }
+
+    .tts-voice-select select:hover {
+      border-color: #A78BFA;
+    }
+
+    .tts-btn-row {
+      display: flex;
+      gap: 12px;
+    }
+
+    .tts-btn {
+      flex: 1;
+      padding: 12px 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .tts-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    .tts-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .tts-btn.stop {
+      background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    }
+
+    /* 질문하기 섹션 */
+    .question-section {
+      margin-top: 32px;
+      padding: 24px;
+      background: #f8f9fa;
+      border-radius: 12px;
+      border: 2px solid #e0e0e0;
+    }
+
+    .question-section h3 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #1a1a1a;
+    }
+
+    .question-hint {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 16px;
+    }
+
+    .text-question-input {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .text-question-input input {
+      flex: 1;
+      padding: 12px 16px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 14px;
+      color: #1a1a1a;
+      transition: all 0.3s;
+    }
+
+    .text-question-input input:focus {
+      outline: none;
+      border-color: #A78BFA;
+      box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.1);
+    }
+
+    .text-question-input input::placeholder {
+      color: #999;
+    }
+
+    .submit-question-btn {
+      padding: 12px 24px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      white-space: nowrap;
+    }
+
+    .submit-question-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    .question-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .voice-question-btn {
+      padding: 14px 24px;
+      background: linear-gradient(135deg, #FF8FAB 0%, #A78BFA 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .voice-question-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(255, 143, 171, 0.4);
+    }
+
+    .voice-question-btn.recording {
+      background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+
+    .question-status {
+      font-size: 14px;
+      color: #666;
+      min-height: 20px;
+      text-align: center;
+    }
+
+    .question-status.recording {
+      color: #ef4444;
+      font-weight: 600;
+    }
+
+    .question-answer {
+      margin-top: 16px;
+      padding: 16px;
+      background: white;
+      border-radius: 8px;
+      border-left: 4px solid #A78BFA;
+    }
+
+    .question-answer.hidden {
+      display: none;
+    }
+
+    .question-answer h4 {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: #1a1a1a;
+    }
+
+    .question-answer p {
+      font-size: 14px;
+      color: #555;
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+
+    .question-answer .answer-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .answer-actions button {
+      padding: 8px 16px;
+      background: #f8f9fa;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .answer-actions button:hover {
+      background: #e9ecef;
+      border-color: #A78BFA;
+    }
+
+    /* 예시 섹션 */
+    .examples-section {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 60px 20px;
+      background: #f8f9fa;
+    }
+
+    .examples-section h2 {
+      font-size: 28px;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 40px;
+      color: #1a1a1a;
+    }
+
+    .examples-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+
+    .example-card {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .example-card::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: linear-gradient(180deg, #FF8FAB 0%, #A78BFA 100%);
+    }
+
+    .example-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .example-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .example-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1a1a1a;
+    }
+
+    .example-badge {
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .example-badge.high {
+      background: #fee;
+      color: #c33;
+    }
+
+    .example-badge.medium {
+      background: #fff4e6;
+      color: #d97706;
+    }
+
+    .example-badge.low {
+      background: #e6f7ff;
+      color: #1890ff;
+    }
+
+    .example-content {
+      margin-bottom: 16px;
+    }
+
+    .example-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+
+    .example-input {
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 14px;
+      color: #555;
+      line-height: 1.6;
+      margin-bottom: 16px;
+      border-left: 3px solid #A78BFA;
+    }
+
+    .example-result {
+      font-size: 14px;
+      color: #666;
+      line-height: 1.6;
+    }
+
+    .example-result strong {
+      color: #1a1a1a;
+      font-weight: 600;
+    }
+
+    .example-guideline {
+      background: #f0f4ff;
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 13px;
+      color: #555;
+      line-height: 1.6;
+      margin-top: 12px;
+    }
+
+    .example-guideline strong {
+      color: #A78BFA;
+      font-weight: 600;
+    }
+
+    /* 정보 섹션 */
+    .info-section {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 60px 20px;
+    }
+
+    .info-section h2 {
+      font-size: 28px;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 40px;
+      color: #1a1a1a;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 24px;
+    }
+
+    .info-card {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .info-card h3 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: #1a1a1a;
+    }
+
+    .info-card p {
+      font-size: 14px;
+      color: #666;
+      line-height: 1.6;
+    }
+
+    /* 중요 안내 섹션 */
+    .disclaimer-section {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 20px;
+      text-align: center;
+    }
+
+    .disclaimer-section h2 {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: #1a1a1a;
+    }
+
+    .disclaimer-section p {
+      font-size: 14px;
+      color: #666;
+      line-height: 1.8;
+    }
+
+    .disclaimer-section strong {
+      color: #c33;
+      font-weight: 600;
+    }
+
+    /* 푸터 */
+    .footer {
+      background: #1a1a1a;
+      color: #999;
+      text-align: center;
+      padding: 24px;
+      font-size: 14px;
+    }
+
+    /* 반응형 */
+    @media (max-width: 768px) {
+      .hero-title {
+        font-size: 24px;
+      }
+
+      .hero-subtitle {
+        font-size: 14px;
+      }
+
+      .main-card {
+        padding: 24px;
+      }
+
+      .steps-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .examples-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <!-- 상단 바 -->
+    <header class="top-bar">
+      <div class="top-brand">
+        <svg class="logo-icon" width="40" height="40" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <!-- 하트 그라데이션 색상 (AI 텍스트와 동일) -->
+            <linearGradient id="heartGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#FF1493"/>
+              <stop offset="100%" stop-color="#A78BFA"/>
+            </linearGradient>
+          </defs>
+          <!-- 하트 모양 -->
+          <path
+            d="
+              M40 12
+              C34 3 18 4 16 18
+              C15 26 20 32 24 36
+              L40 54
+              L56 36
+              C60 32 65 26 64 18
+              C62 4 46 3 40 12
+              Z
+            "
+            fill="url(#heartGradient)"
+          />
+          <!-- 심전도 + 가운데 가로선 (화이트) -->
+          <!-- 뒷배경 가로선 -->
+          <path
+            d="M18 30 H62"
+            stroke="white"
+            stroke-width="4"
+            stroke-linecap="round"
+          />
+          <!-- 지그재그 심전도 라인 -->
+          <path
+            d="M20 30 L30 30 L35 24 L40 38 L46 26 L52 30 L60 30"
+            stroke="white"
+            stroke-width="4"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            fill="none"
+          />
+        </svg>
+        <div class="logo-text">
+          <span class="logo-text-main">SilverSense</span>
+          <span class="logo-text-ai">AI</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- 히어로 영역 -->
+    <section class="hero">
+      <div class="hero-inner">
+        <h1 class="hero-title">
+          혼자 계실 때도 <span class="accent">안심하세요.</span><br />
+          AI가 <span class="accent">위험 신호를 감지해</span> 바로 안내합니다.
+        </h1>
+        <p class="hero-subtitle">
+          SilverSense AI는 사용자의 소리를 실시간으로 듣고 위험을 감지해<br />
+          대처 방법을 안내하는 서비스를 목표로 합니다.<br />
+          현재 프로토타입에서는 브라우저 실시간 감지가 제한되어<br />
+          파일 업로드 방식으로 분석하고 지침을 제공하고 있습니다.
+        </p>
+      </div>
+    </section>
+
+    <!-- 메인 카드: 파일 업로드 -->
+    <main class="main">
+      <section id="main-card" class="main-card">
+        <div class="main-card-header">
+          <span class="main-card-icon">⬆</span>
+          <div class="main-card-text">
+            <h2>지금 상황을 알려주세요</h2>
+            <p>응급 상황이 의심되는 영상 또는 음성을 선택해 주세요.</p>
+          </div>
+        </div>
+        <div class="upload-area">
+          <label class="file-label">
+            <input type="file" id="fileInput" accept="video/*,audio/*" />
+            파일 선택하기
+          </label>
+          <button id="analyzeBtn" disabled class="primary-btn">
+            상황 분석 시작
+          </button>
+        </div>
+        <p id="statusText" class="status-text"></p>
+
+        <!-- 어떤 파일을 올리면 좋은지 가이드 -->
+        <div class="guide-box">
+          <h3>어떤 파일을 올리면 좋을까요?</h3>
+          <ul>
+            <li>쓰러지는 소리, 큰 충격음이 들리는 영상이나 음성</li>
+            <li>"도와주세요", "쓰러졌어요"처럼 도움을 요청하는 음성</li>
+            <li>10~20초 정도의 짧은 파일이면 더 잘 분석됩니다.</li>
+          </ul>
+          <p class="guide-warning">
+            ※ 이름, 주민등록번호, 정확한 집 주소처럼 개인을 바로 알아볼 수 있는 내용은 포함하지 않는 것이 안전합니다. 실제 신고 시에는 119 구조대원에게만 주소를 말씀해 주세요.
+          </p>
+        </div>
+      </section>
+
+      <!-- 로딩 상태 -->
+      <section id="loadingBox" class="loading-card hidden">
+        <div class="spinner"></div>
+        <div class="loading-text">
+          <p class="loading-title">AI가 소리와 말을 분석하는 중입니다…</p>
+          <p class="loading-sub">
+            음성과 주변 소리를 함께 확인하여, 지금 해야 할 행동을 정리하고 있습니다.
+          </p>
+        </div>
+      </section>
+
+      <!-- 결과 영역: 3단계 카드 -->
+      <section id="resultSection" class="result-wrapper hidden">
+        <div class="emergency-header">
+          <span class="emergency-label">분석 결과</span>
+          <span id="emergencyLevel" class="emergency-badge">긴급도: -</span>
+        </div>
+        <div class="result-summary">
+          <h3>상황 요약</h3>
+          <ul id="summaryList"></ul>
+        </div>
+        <!-- TTS 컨트롤 -->
+        <div class="tts-controls">
+          <div class="tts-voice-select">
+            <label for="voiceSelect">음성 선택:</label>
+            <select id="voiceSelect">
+              <option value="auto">자동 선택 (권장)</option>
+            </select>
+          </div>
+          <div class="tts-voice-select">
+            <label for="rateSelect">읽기 속도:</label>
+            <select id="rateSelect" onchange="console.log('속도 변경:', this.value)">
+              <option value="0.5">매우 느리게</option>
+              <option value="0.7">느리게</option>
+              <option value="1.0" selected>보통</option>
+              <option value="1.3">빠르게</option>
+              <option value="1.7">매우 빠르게</option>
+            </select>
+          </div>
+          <div class="tts-btn-row">
+            <button type="button" id="ttsBtn" class="tts-btn" onclick="playTTS()">
+              <span>🔊</span>
+              <span>지침 음성으로 듣기</span>
+            </button>
+          </div>
+        </div>
+        <div class="steps-grid">
+          <!-- 1단계 -->
+          <article class="step-card">
+            <div class="step-icon">🕒</div>
+            <h3>1. 지금 당장 해야 할 일</h3>
+            <ul id="stepNow"></ul>
+          </article>
+
+          <!-- 2단계 -->
+          <article class="step-card">
+            <div class="step-icon">📞</div>
+            <h3>2. 119 연결을 기다리면서 할 일</h3>
+            <ul id="stepWait"></ul>
+          </article>
+
+          <!-- 3단계 -->
+          <article class="step-card">
+            <div class="step-icon">📢</div>
+            <h3>3. 119에 이렇게 말하세요</h3>
+            <ul id="stepCall"></ul>
+          </article>
+        </div>
+        <!-- 질문하기 섹션 -->
+        <div class="question-section">
+          <h3>추가로 궁금한 점이 있으신가요?</h3>
+          <p class="question-hint">음성 또는 텍스트로 질문하시면 AI가 답변해드립니다.</p>
+          
+          <!-- 텍스트 입력 -->
+          <div class="text-question-input">
+            <input 
+              type="text" 
+              id="textQuestionInput" 
+              placeholder="질문을 입력하세요 (예: 다리가 너무 아픈데 어떻게 해야 하나요?)"
+              onkeypress="if(event.key === 'Enter') submitTextQuestion()"
+            />
+            <button type="button" class="submit-question-btn" onclick="submitTextQuestion()">
+              전송
+            </button>
+          </div>
+          
+          <!-- 음성 입력 -->
+          <div class="question-controls">
+            <button type="button" id="voiceQuestionBtn" class="voice-question-btn" onclick="startVoiceQuestion()">
+              <span>🎤</span>
+              <span>음성으로 질문하기</span>
+            </button>
+            <div id="questionStatus" class="question-status"></div>
+          </div>
+          <div id="questionAnswer" class="question-answer hidden"></div>
+        </div>
+        <button type="button" class="reset-btn" onclick="resetAnalysis()">
+          다른 상황 분석하기
+        </button>
+      </section>
+    </main>
+
+    <!-- 상황별 예시 섹션 -->
+    <section class="examples-section">
+      <h2>이런 상황에서 도움이 됩니다</h2>
+      <div class="examples-grid">
+        <!-- 예시 1: 낙상 + 심정지 -->
+        <article class="example-card high">
+          <div class="example-header">
+            <h3 class="example-title">낙상 후 의식 소실</h3>
+            <span class="example-badge high">긴급도: 높음</span>
+          </div>
+          <div class="example-content">
+            <div class="example-label">입력 예시</div>
+            <div class="example-input">
+              <strong>음성:</strong> "할머니가 갑자기 쓰러져서 숨을 안 쉬어요..."<br />
+              <strong>소리:</strong> 큰 충격음 (낙상 감지)
+            </div>
+            <div class="example-result">
+              <strong>분석 결과:</strong> S2 상황 (낙상 + 생명위협)<br />
+              <strong>감지된 증상:</strong> fall, possible_cardiac_arrest, not_breathing
+            </div>
+            <div class="example-guideline">
+              <strong>제공되는 지침:</strong> 즉시 119 신고 → 전화 연결 대기 중 자세 조정 → 신고 멘트 안내
+            </div>
+          </div>
+        </article>
+
+        <!-- 예시 2: 호흡곤란 -->
+        <article class="example-card high">
+          <div class="example-header">
+            <h3 class="example-title">호흡곤란</h3>
+            <span class="example-badge high">긴급도: 높음</span>
+          </div>
+          <div class="example-content">
+            <div class="example-label">입력 예시</div>
+            <div class="example-input">
+              <strong>음성:</strong> "숨쉬기가 너무 힘들어요... 가슴이 답답해요"<br />
+              <strong>소리:</strong> 생활소음
+            </div>
+            <div class="example-result">
+              <strong>분석 결과:</strong> S6 상황 (고위험 의료응급)<br />
+              <strong>감지된 증상:</strong> breathing_difficulty, high_urgency
+            </div>
+            <div class="example-guideline">
+              <strong>제공되는 지침:</strong> 119 신고 → 반좌위 자세, 옷 풀기 → 신고 멘트 안내
+            </div>
+          </div>
+        </article>
+
+        <!-- 예시 3: 화재 -->
+        <article class="example-card high">
+          <div class="example-header">
+            <h3 class="example-title">화재 / 연기 감지</h3>
+            <span class="example-badge high">긴급도: 높음</span>
+          </div>
+          <div class="example-content">
+            <div class="example-label">입력 예시</div>
+            <div class="example-input">
+              <strong>음성:</strong> "불이 났어요! 연기가 나고 있어요!"<br />
+              <strong>소리:</strong> 화재 감지
+            </div>
+            <div class="example-result">
+              <strong>분석 결과:</strong> S4 상황 (화재)<br />
+              <strong>감지된 증상:</strong> fire_suspected, high_urgency
+            </div>
+            <div class="example-guideline">
+              <strong>제공되는 지침:</strong> 즉시 119 신고 → 낮은 자세, 코·입 막기 → 대피로 확보 안내
+            </div>
+          </div>
+        </article>
+
+        <!-- 예시 4: 낙상 + 부상 -->
+        <article class="example-card medium">
+          <div class="example-header">
+            <h3 class="example-title">낙상 후 부상</h3>
+            <span class="example-badge medium">긴급도: 보통</span>
+          </div>
+          <div class="example-content">
+            <div class="example-label">입력 예시</div>
+            <div class="example-input">
+              <strong>음성:</strong> "넘어졌는데 다리가 너무 아파요..."<br />
+              <strong>소리:</strong> 큰 충격음 (낙상 감지)
+            </div>
+            <div class="example-result">
+              <strong>분석 결과:</strong> S3 상황 (낙상 + 부상)<br />
+              <strong>감지된 증상:</strong> fall, possible_fracture
+            </div>
+            <div class="example-guideline">
+              <strong>제공되는 지침:</strong> 119 신고 → 움직임 최소화 → 신고 멘트 안내
+            </div>
+          </div>
+        </article>
+
+        <!-- 예시 5: 흉통 -->
+        <article class="example-card medium">
+          <div class="example-header">
+            <h3 class="example-title">가슴 통증</h3>
+            <span class="example-badge medium">긴급도: 보통</span>
+          </div>
+          <div class="example-content">
+            <div class="example-label">입력 예시</div>
+            <div class="example-input">
+              <strong>음성:</strong> "가슴이 너무 아프고 숨쉬기가 조금 힘들어요"<br />
+              <strong>소리:</strong> 생활소음
+            </div>
+            <div class="example-result">
+              <strong>분석 결과:</strong> S1 상황 (의료 응급)<br />
+              <strong>감지된 증상:</strong> chest_pain, breathing_difficulty
+            </div>
+            <div class="example-guideline">
+              <strong>제공되는 지침:</strong> 증상 확인 → 필요시 119 신고 → 편안한 자세, 옷 풀기 안내
+            </div>
+          </div>
+        </article>
+
+        <!-- 예시 6: 갇힘 -->
+        <article class="example-card medium">
+          <div class="example-header">
+            <h3 class="example-title">갇힘 / 고립</h3>
+            <span class="example-badge medium">긴급도: 보통</span>
+          </div>
+          <div class="example-content">
+            <div class="example-label">입력 예시</div>
+            <div class="example-input">
+              <strong>음성:</strong> "문이 안 열려요... 나갈 수가 없어요"<br />
+              <strong>소리:</strong> 갇힘 감지
+            </div>
+            <div class="example-result">
+              <strong>분석 결과:</strong> S5 상황 (갇힘 / 고립)<br />
+              <strong>감지된 증상:</strong> trapped_or_confined
+            </div>
+            <div class="example-guideline">
+              <strong>제공되는 지침:</strong> 119 신고 → 안전한 위치 유지 → 신고 멘트 안내
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- 서비스 소개 / 동작 원리 섹션 -->
+    <section class="info-section">
+      <h2>SilverSense AI는 원래 이렇게 동작합니다</h2>
+      <div class="info-grid">
+        <article class="info-card">
+          <h3>실시간 위험 감지</h3>
+          <p>
+            SilverSense AI는 사용자의 음성·환경 소리를 실시간으로 듣고,
+            낙상 소리, 도움 요청, 호흡곤란 음성 등 위험 신호를
+            즉시 감지하도록 설계되었습니다.
+          </p>
+        </article>
+        <article class="info-card">
+          <h3>즉시 대처 안내</h3>
+          <p>
+            위험이 감지되면 바로 해야 할 일,
+            119 연결 대기 중 해야 할 일,
+            119에 어떻게 말해야 하는지 단계별로 안내합니다.
+          </p>
+        </article>
+        <article class="info-card">
+          <h3>프로토타입 작동 방식</h3>
+          <p>
+            현재 웹에서는 실시간 마이크 연동과 지속 감시가 어렵기 때문에,
+            <strong>파일 업로드 방식으로</strong> 상황을 분석하고 동일한
+            위험 판단 로직과 지침 생성 시스템을 적용하고 있습니다.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section class="disclaimer-section">
+      <h2>중요 안내</h2>
+      <p>
+        SilverSense AI는 응급 상황을 더 잘 이해하는 데 도움을 주는
+        <strong>보조 도구</strong>입니다.<br />
+        실제 생명 위협이 느껴질 경우, 안내 내용과 상관없이
+        <strong>항상 119에 바로 신고</strong>해 주세요.
+      </p>
+    </section>
+
+    <footer class="footer">
+      SilverSense AI · 응급 상황 대응 프로토타입
+    </footer>
+  </div>
+
+  <script>
+    // API URL 자동 감지
+    const urlParams = new URLSearchParams(window.location.search);
+    const API_BASE_URL = urlParams.get('api') || window.location.origin;
+    console.log('API 서버 URL:', API_BASE_URL);
+
+    // DOM 요소
+    const fileInput = document.getElementById('fileInput');
+    const analyzeBtn = document.getElementById('analyzeBtn');
+    const statusText = document.getElementById('statusText');
+    const loadingBox = document.getElementById('loadingBox');
+    const resultSection = document.getElementById('resultSection');
+    const mainCard = document.getElementById('main-card');
+
+    // 파일 선택 이벤트
+    fileInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        statusText.textContent = `선택된 파일: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
+        analyzeBtn.disabled = false;
+      } else {
+        analyzeBtn.disabled = true;
+        statusText.textContent = '';
+      }
+    });
+
+    // 분석 시작 버튼
+    analyzeBtn.addEventListener('click', () => {
+      const file = fileInput.files[0];
+      if (file) {
+        analyzeFile(file);
+      }
+    });
+
+    // 드래그 앤 드롭
+    const uploadArea = document.querySelector('.upload-area');
+    
+    uploadArea.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadArea.style.background = '#f0f0f0';
+    });
+
+    uploadArea.addEventListener('dragleave', () => {
+      uploadArea.style.background = '';
+    });
+
+    uploadArea.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadArea.style.background = '';
+      const files = e.dataTransfer.files;
+      if (files.length > 0) {
+        fileInput.files = files;
+        fileInput.dispatchEvent(new Event('change'));
+      }
+    });
+
+    // 파일 분석 함수
+    async function analyzeFile(file) {
+      // UI 상태 변경
+      mainCard.style.opacity = '0.6';
+      mainCard.style.pointerEvents = 'none';
+      analyzeBtn.disabled = true;
+      loadingBox.classList.remove('hidden');
+      resultSection.classList.add('hidden');
+      statusText.textContent = '분석 중...';
+
+      const formData = new FormData();
+      formData.append('file', file);
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/emergency/analyze-video`, {
+          method: 'POST',
+          body: formData
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json().catch(() => ({ detail: '요청 실패' }));
+          throw new Error(errorData.detail || `HTTP 오류: ${response.status}`);
+        }
+
+        const data = await response.json();
+        displayResult(data);
+      } catch (err) {
+        statusText.textContent = '오류 발생: ' + err.message;
+        statusText.style.color = '#c33';
+        loadingBox.classList.add('hidden');
+        mainCard.style.opacity = '1';
+        mainCard.style.pointerEvents = 'auto';
+        analyzeBtn.disabled = false;
+      }
+    }
+
+    // 결과 표시 함수
+    function displayResult(data) {
+      const { situation, guideline } = data;
+
+      // 현재 상황 정보 저장 (질문-답변에 사용)
+      currentSituation = situation;
+
+      // 긴급도 표시
+      const emergencyLevel = document.getElementById('emergencyLevel');
+      const level = situation?.emergency_level || 'unknown';
+      emergencyLevel.textContent = `긴급도: ${level === 'high' ? '높음' : level === 'medium' ? '보통' : '낮음'}`;
+      emergencyLevel.className = 'emergency-badge ' + level;
+
+      // 상황 요약
+      const summaryList = document.getElementById('summaryList');
+      summaryList.innerHTML = '';
+      if (situation?.symptoms && situation.symptoms.length > 0) {
+        situation.symptoms.forEach(symptom => {
+          const li = document.createElement('li');
+          li.textContent = symptom;
+          summaryList.appendChild(li);
+        });
+      } else {
+        const li = document.createElement('li');
+        li.textContent = '상황 분석 완료';
+        summaryList.appendChild(li);
+      }
+
+      // 지침 파싱
+      parseGuideline(guideline);
+
+      // 결과 표시
+      loadingBox.classList.add('hidden');
+      resultSection.classList.remove('hidden');
+      mainCard.style.opacity = '1';
+      mainCard.style.pointerEvents = 'auto';
+      statusText.textContent = '분석 완료';
+      statusText.style.color = '#666';
+
+      // 결과 영역으로 스크롤
+      resultSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // 지침 파싱 함수
+    function parseGuideline(guideline) {
+      const stepNow = document.getElementById('stepNow');
+      const stepWait = document.getElementById('stepWait');
+      const stepCall = document.getElementById('stepCall');
+
+      // 초기화
+      stepNow.innerHTML = '';
+      stepWait.innerHTML = '';
+      stepCall.innerHTML = '';
+
+      const lines = guideline.split('\n');
+      let currentStep = null;
+      let currentList = null;
+
+      for (let i = 0; i < lines.length; i++) {
+        const line = lines[i].trim();
+        if (!line) continue;
+
+        // 단계 감지
+        if (line.includes('**1단계') || line.includes('1단계:') || line.includes('**1.') || line.includes('1.')) {
+          currentStep = 'now';
+          currentList = stepNow;
+        } else if (line.includes('**2단계') || line.includes('2단계:') || line.includes('**2.') || line.includes('2.')) {
+          currentStep = 'wait';
+          currentList = stepWait;
+        } else if (line.includes('**3단계') || line.includes('3단계:') || line.includes('**3.') || line.includes('3.')) {
+          currentStep = 'call';
+          currentList = stepCall;
+        } else if (currentList && (line.startsWith('- ') || line.startsWith('• ') || line.startsWith('* '))) {
+          // 리스트 항목
+          const li = document.createElement('li');
+          li.textContent = line.replace(/^[-•*]\s+/, '').trim();
+          currentList.appendChild(li);
+        } else if (currentList && line.length > 10 && !line.includes('**') && !line.includes('단계')) {
+          // 일반 텍스트도 리스트로 추가
+          const li = document.createElement('li');
+          li.textContent = line.trim();
+          currentList.appendChild(li);
+        }
+      }
+
+      // 기본값 (파싱 실패 시)
+      if (stepNow.children.length === 0) {
+        stepNow.innerHTML = '<li>응급 상황 분석 후 가장 우선순위가 높은 행동 지침이 표시됩니다.</li>';
+      }
+      if (stepWait.children.length === 0) {
+        stepWait.innerHTML = '<li>119 신고 후 대기 중 할 수 있는 응급처치 방법을 안내합니다.</li>';
+      }
+      if (stepCall.children.length === 0) {
+        stepCall.innerHTML = '<li>상황에 맞는 구체적인 신고 멘트를 제시합니다.</li>';
+      }
+    }
+
+    // TTS 관련 변수
+    let speechSynthesis = window.speechSynthesis;
+    let currentUtterance = null;
+    let isPlaying = false;
+
+    // TTS 재생 함수
+    function playTTS() {
+      const ttsBtn = document.getElementById('ttsBtn');
+      
+      // 이미 재생 중이면 정지
+      if (isPlaying) {
+        stopTTS();
+        return;
+      }
+
+      // 지침 텍스트 수집
+      const stepNow = document.getElementById('stepNow');
+      const stepWait = document.getElementById('stepWait');
+      const stepCall = document.getElementById('stepCall');
+
+      let fullText = '지금 상황이 불안하시겠지만, 천천히 따라해 주세요. 하나씩 안내해드리겠습니다. ';
+
+      // 1단계
+      if (stepNow.children.length > 0) {
+        fullText += '먼저, 지금 당장 해야 할 일입니다. ';
+        const items = Array.from(stepNow.children);
+        items.forEach((li, index) => {
+          if (index === 0) {
+            fullText += li.textContent + '. ';
+          } else {
+            fullText += '그리고, ' + li.textContent + '. ';
+          }
+        });
+        fullText += '잘 하고 계십니다. ';
+      }
+
+      // 2단계
+      if (stepWait.children.length > 0) {
+        fullText += '이제, 119에 전화를 걸고 연결을 기다리는 동안 할 수 있는 일입니다. ';
+        const items = Array.from(stepWait.children);
+        items.forEach((li, index) => {
+          if (index === 0) {
+            fullText += li.textContent + '. ';
+          } else {
+            fullText += '또한, ' + li.textContent + '. ';
+          }
+        });
+        fullText += '괜찮습니다, 천천히 하세요. ';
+      }
+
+      // 3단계
+      if (stepCall.children.length > 0) {
+        fullText += '마지막으로, 119에 전화가 연결되면 이렇게 말씀하시면 됩니다. ';
+        const items = Array.from(stepCall.children);
+        items.forEach((li, index) => {
+          if (index === 0) {
+            fullText += li.textContent + '. ';
+          } else {
+            fullText += '그리고, ' + li.textContent + '. ';
+          }
+        });
+        fullText += '걱정하지 마세요, 구조대원들이 도와드릴 거예요. ';
+      }
+
+      fullText += '지침 안내를 마쳤습니다. 혼자 계시더라도 괜찮습니다. ';
+
+      // "119"를 "일일구"로 치환 (TTS가 올바르게 읽도록)
+      fullText = fullText.replace(/119/g, '일일구');
+
+      // SpeechSynthesis로 음성 재생
+      if (speechSynthesis) {
+        // 기존 재생 완전히 중지
+        if (isPlaying || speechSynthesis.speaking) {
+          speechSynthesis.cancel();
+          isPlaying = false;
+          // 상태 초기화를 위해 짧은 지연
+          setTimeout(() => {
+            startTTSPlayback(fullText);
+          }, 100);
+          return;
+        }
+        
+        startTTSPlayback(fullText);
+      }
+    }
+
+    // TTS 재생 시작 함수 (분리)
+    function startTTSPlayback(fullText) {
+      if (!speechSynthesis) return;
+      
+      // 선택된 속도 가져오기
+      const rateSelect = document.getElementById('rateSelect');
+      if (!rateSelect) {
+        console.error('rateSelect 요소를 찾을 수 없습니다.');
+        return;
+      }
+      
+      const selectedRate = parseFloat(rateSelect.value);
+      if (isNaN(selectedRate)) {
+        console.error('속도 값이 유효하지 않습니다:', rateSelect.value);
+        return;
+      }
+      
+      console.log('선택된 속도:', selectedRate, '원본 값:', rateSelect.value);
+      
+      currentUtterance = new SpeechSynthesisUtterance(fullText);
+      currentUtterance.lang = 'ko-KR'; // 한국어 설정
+      currentUtterance.rate = selectedRate; // 속도 (0.1 ~ 10)
+      currentUtterance.pitch = 1.1; // 음높이 (약간 높여서 더 따뜻하게)
+      currentUtterance.volume = 1; // 볼륨 (0 ~ 1, 기본값 1)
+      
+      console.log('TTS 속도 설정 완료:', currentUtterance.rate);
+
+      // 선택된 음성 사용
+      const voiceSelect = document.getElementById('voiceSelect');
+      const selectedVoiceIndex = voiceSelect.value;
+
+      if (selectedVoiceIndex === 'auto') {
+        // 자동 선택: 한국어 음성 찾기
+        const voices = speechSynthesis.getVoices();
+        const koreanVoice = voices.find(voice => 
+          voice.lang.includes('ko') || voice.lang.includes('KR')
+        );
+        if (koreanVoice) {
+          currentUtterance.voice = koreanVoice;
+        }
+      } else {
+        // 사용자가 선택한 음성 사용
+        const selectedVoice = availableVoices[parseInt(selectedVoiceIndex)];
+        if (selectedVoice) {
+          currentUtterance.voice = selectedVoice;
+        }
+      }
+
+      // 재생 시작
+      const ttsBtn = document.getElementById('ttsBtn');
+      currentUtterance.onstart = () => {
+        isPlaying = true;
+        ttsBtn.innerHTML = '<span>⏸</span><span>재생 중지</span>';
+        ttsBtn.classList.add('stop');
+      };
+
+      // 재생 종료
+      currentUtterance.onend = () => {
+        isPlaying = false;
+        ttsBtn.innerHTML = '<span>🔊</span><span>지침 음성으로 듣기</span>';
+        ttsBtn.classList.remove('stop');
+      };
+
+      // 오류 처리
+      currentUtterance.onerror = (event) => {
+        // 'interrupted' 오류는 무시 (사용자가 중지한 경우)
+        if (event.error === 'interrupted') {
+          console.log('TTS 재생이 중단되었습니다.');
+          isPlaying = false;
+          ttsBtn.innerHTML = '<span>🔊</span><span>지침 음성으로 듣기</span>';
+          ttsBtn.classList.remove('stop');
+          return;
+        }
+        
+        console.error('TTS 오류:', event.error);
+        isPlaying = false;
+        ttsBtn.innerHTML = '<span>🔊</span><span>지침 음성으로 듣기</span>';
+        ttsBtn.classList.remove('stop');
+        
+        // 심각한 오류만 알림
+        if (event.error !== 'canceled') {
+          alert('음성 재생 중 오류가 발생했습니다: ' + event.error);
+        }
+      };
+
+      speechSynthesis.speak(currentUtterance);
+    }
+
+    // TTS 정지 함수
+    function stopTTS() {
+      if (speechSynthesis && isPlaying) {
+        speechSynthesis.cancel();
+        isPlaying = false;
+        const ttsBtn = document.getElementById('ttsBtn');
+        ttsBtn.innerHTML = '<span>🔊</span><span>지침 음성으로 듣기</span>';
+        ttsBtn.classList.remove('stop');
+      }
+    }
+
+
+    // 음성 질문 관련 변수
+    let recognition = null;
+    let currentSituation = null; // 현재 분석된 상황 정보 저장
+
+    // 음성 인식 초기화
+    function initSpeechRecognition() {
+      if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        recognition = new SpeechRecognition();
+        recognition.lang = 'ko-KR';
+        recognition.continuous = false;
+        recognition.interimResults = false;
+
+        recognition.onresult = (event) => {
+          const transcript = event.results[0][0].transcript;
+          handleQuestion(transcript);
+        };
+
+        recognition.onerror = (event) => {
+          console.error('음성 인식 오류:', event.error);
+          const questionStatus = document.getElementById('questionStatus');
+          if (questionStatus) {
+            questionStatus.textContent = '음성 인식 중 오류가 발생했습니다. 다시 시도해주세요.';
+            questionStatus.style.color = '#ef4444';
+          }
+          stopVoiceRecording();
+        };
+
+        recognition.onend = () => {
+          stopVoiceRecording();
+        };
+      } else {
+        console.warn('이 브라우저는 음성 인식을 지원하지 않습니다.');
+      }
+    }
+
+    // 음성 질문 시작
+    function startVoiceQuestion() {
+      if (!recognition) {
+        initSpeechRecognition();
+      }
+
+      if (!recognition) {
+        alert('이 브라우저는 음성 인식을 지원하지 않습니다. Chrome 또는 Edge를 사용해주세요.');
+        return;
+      }
+
+      if (!currentSituation) {
+        alert('먼저 상황을 분석해주세요.');
+        return;
+      }
+
+      const voiceQuestionBtn = document.getElementById('voiceQuestionBtn');
+      const questionStatus = document.getElementById('questionStatus');
+
+      if (recognition && recognition.isListening) {
+        // 이미 녹음 중이면 중지
+        recognition.stop();
+        return;
+      }
+
+      try {
+        recognition.start();
+        voiceQuestionBtn.classList.add('recording');
+        voiceQuestionBtn.innerHTML = '<span>⏹</span><span>녹음 중지</span>';
+        questionStatus.textContent = '🎤 말씀해주세요...';
+        questionStatus.classList.add('recording');
+      } catch (error) {
+        console.error('음성 인식 시작 오류:', error);
+        questionStatus.textContent = '음성 인식을 시작할 수 없습니다. 마이크 권한을 확인해주세요.';
+        questionStatus.style.color = '#ef4444';
+      }
+    }
+
+    // 음성 녹음 중지
+    function stopVoiceRecording() {
+      if (recognition && recognition.isListening) {
+        recognition.stop();
+      }
+
+      const voiceQuestionBtn = document.getElementById('voiceQuestionBtn');
+      const questionStatus = document.getElementById('questionStatus');
+
+      if (voiceQuestionBtn) {
+        voiceQuestionBtn.classList.remove('recording');
+        voiceQuestionBtn.innerHTML = '<span>🎤</span><span>음성으로 질문하기</span>';
+      }
+      if (questionStatus) {
+        questionStatus.textContent = '';
+        questionStatus.classList.remove('recording');
+      }
+    }
+
+    // 텍스트 질문 제출
+    function submitTextQuestion() {
+      const textInput = document.getElementById('textQuestionInput');
+      if (!textInput) return;
+
+      const questionText = textInput.value.trim();
+      if (!questionText) {
+        alert('질문을 입력해주세요.');
+        return;
+      }
+
+      if (!currentSituation) {
+        alert('먼저 상황을 분석해주세요.');
+        return;
+      }
+
+      // 입력 필드 초기화
+      textInput.value = '';
+      
+      // 질문 처리
+      handleQuestion(questionText);
+    }
+
+    // 질문 처리
+    async function handleQuestion(questionText) {
+      const questionStatus = document.getElementById('questionStatus');
+      const questionAnswer = document.getElementById('questionAnswer');
+
+      if (questionStatus) {
+        questionStatus.textContent = '질문을 처리하는 중...';
+        questionStatus.style.color = '#666';
+      }
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/api/emergency/ask`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            question: questionText,
+            situation: currentSituation
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP 오류: ${response.status}`);
+        }
+
+        const data = await response.json();
+        const answer = data.answer;
+
+        // 답변 표시
+        if (questionAnswer) {
+          questionAnswer.innerHTML = `
+            <h4>질문: ${questionText}</h4>
+            <p>${answer.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</p>
+            <div class="answer-actions">
+              <button onclick="speakAnswer('${answer.replace(/'/g, "\\'").replace(/"/g, '&quot;')}')">🔊 답변 듣기</button>
+              <button onclick="document.getElementById('questionAnswer').classList.add('hidden')">닫기</button>
+            </div>
+          `;
+          questionAnswer.classList.remove('hidden');
+        }
+        
+        if (questionStatus) {
+          questionStatus.textContent = '답변을 받았습니다.';
+          questionStatus.style.color = '#666';
+        }
+
+        // 자동으로 답변 읽어주기
+        setTimeout(() => {
+          speakAnswer(answer);
+        }, 500);
+
+      } catch (error) {
+        console.error('질문 처리 오류:', error);
+        if (questionStatus) {
+          questionStatus.textContent = '답변 생성 중 오류가 발생했습니다.';
+          questionStatus.style.color = '#ef4444';
+        }
+      }
+    }
+
+    // 답변을 TTS로 읽어주기
+    function speakAnswer(text) {
+      if (!speechSynthesis) return;
+
+      // "119"를 "일일구"로 치환
+      const textToSpeak = text.replace(/119/g, '일일구');
+
+      const utterance = new SpeechSynthesisUtterance(textToSpeak);
+      utterance.lang = 'ko-KR';
+      
+      // 선택된 속도 사용
+      const rateSelect = document.getElementById('rateSelect');
+      if (rateSelect) {
+        utterance.rate = parseFloat(rateSelect.value) || 0.85;
+      } else {
+        utterance.rate = 0.85;
+      }
+      
+      utterance.pitch = 1.1;
+      utterance.volume = 1;
+
+      // 한국어 음성 선택
+      const voices = speechSynthesis.getVoices();
+      const koreanVoice = voices.find(voice => 
+        voice.lang.includes('ko') || voice.lang.includes('KR')
+      );
+      if (koreanVoice) {
+        utterance.voice = koreanVoice;
+      }
+
+      speechSynthesis.speak(utterance);
+    }
+
+    // 분석 초기화 함수
+    function resetAnalysis() {
+      fileInput.value = '';
+      analyzeBtn.disabled = true;
+      statusText.textContent = '';
+      statusText.style.color = '#666';
+      resultSection.classList.add('hidden');
+      stopTTS(); // TTS 정지
+      stopVoiceRecording(); // 음성 녹음 중지
+      currentSituation = null; // 상황 정보 초기화
+      const questionAnswer = document.getElementById('questionAnswer');
+      if (questionAnswer) {
+        questionAnswer.classList.add('hidden');
+      }
+      mainCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // 페이지 로드 시 음성 인식 초기화
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initSpeechRecognition);
+    } else {
+      initSpeechRecognition();
+    }
+  </script>
+</body>
+</html>
