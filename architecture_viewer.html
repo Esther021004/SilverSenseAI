@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SilverSense AI - 시스템 아키텍처</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 40px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .controls {
+            padding: 20px 40px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .diagram-container {
+            padding: 40px;
+            background: white;
+            overflow-x: auto;
+            min-height: 600px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .diagram-wrapper {
+            width: 100%;
+            text-align: center;
+        }
+
+        .diagram-wrapper svg {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #667eea;
+            font-size: 1.2em;
+        }
+
+        .error {
+            text-align: center;
+            padding: 40px;
+            color: #e74c3c;
+            font-size: 1.1em;
+        }
+
+        .info-box {
+            margin: 20px 40px;
+            padding: 20px;
+            background: #f0f7ff;
+            border-left: 4px solid #667eea;
+            border-radius: 8px;
+        }
+
+        .info-box h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .info-box p {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .footer {
+            padding: 20px 40px;
+            background: #f8f9fa;
+            text-align: center;
+            color: #666;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .controls {
+                padding: 15px 20px;
+            }
+
+            .diagram-container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏥 SilverSense AI</h1>
+            <p>시스템 아키텍처 다이어그램</p>
+        </div>
+
+        <div class="controls">
+            <button class="btn active" onclick="showDiagram('full')">전체 아키텍처</button>
+            <button class="btn" onclick="showDiagram('simple')">간단 버전</button>
+            <button class="btn" onclick="showDiagram('pipeline')">파이프라인</button>
+            <button class="btn" onclick="downloadDiagram()">이미지 다운로드</button>
+        </div>
+
+        <div class="info-box">
+            <h3>💡 사용 방법</h3>
+            <p>
+                • 다이어그램을 확대/축소하려면 마우스 휠을 사용하세요<br>
+                • 이미지로 다운로드하려면 "이미지 다운로드" 버튼을 클릭하세요<br>
+                • 발표자료에 링크로 공유하거나, 전체화면으로 보여주세요
+            </p>
+        </div>
+
+        <div class="diagram-container">
+            <div class="diagram-wrapper" id="diagram-wrapper">
+                <div class="loading">다이어그램을 로딩 중입니다...</div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>SilverSense AI - Emergency Assistant System Architecture</p>
+        </div>
+    </div>
+
+    <script>
+        // Mermaid 초기화
+        mermaid.initialize({ 
+            startOnLoad: false,
+            theme: 'default',
+            themeVariables: {
+                primaryColor: '#e1f5ff',
+                primaryTextColor: '#01579b',
+                primaryBorderColor: '#01579b',
+                lineColor: '#667eea',
+                secondaryColor: '#fff4e1',
+                tertiaryColor: '#ffe1f5'
+            },
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true,
+                curve: 'basis'
+            }
+        });
+
+        // 다이어그램 정의
+        const diagrams = {
+            full: `graph TB
+    subgraph "사용자 인터페이스"
+        UI[웹 브라우저<br/>silversense_ai.html]
+        TTS[Text-to-Speech<br/>Web Speech API]
+        STT_IN[Speech-to-Text<br/>Web Speech API]
+    end
+    
+    subgraph "FastAPI 서버"
+        API[main.py]
+        EP1[POST /api/emergency/analyze-video]
+        EP2[POST /api/emergency/ask]
+    end
+    
+    subgraph "전처리"
+        FILE[파일 업로드<br/>mp4/wav/mp3]
+        EXTRACT[오디오 추출<br/>MoviePy]
+        AUDIO[오디오 파일<br/>wav]
+    end
+    
+    subgraph "Module A - Speech Analysis"
+        STT[STT<br/>Whisper]
+        A[음성 분석<br/>module_a_speech.py]
+        INTENT[Intent 분류<br/>intent_rules.py]
+        SPEECH_RESULT[Speech Result<br/>disaster_large, urgency_level 등]
+    end
+    
+    subgraph "Module B - Sound Analysis"
+        B[사운드 분석<br/>module_b_sound.py]
+        CNN[CNN 모델<br/>PyTorch]
+        SOUND_RESULT[Sound Result<br/>event, confidence]
+    end
+    
+    subgraph "Module C - Fusion"
+        C[상황 융합<br/>module_c_fusion.py]
+        GEMINI_FUSION[Gemini API<br/>gemini-flash-lite-latest]
+        SITUATION[Situation JSON<br/>S0~S7, emergency_level]
+    end
+    
+    subgraph "RAG System"
+        RAG_CLIENT[rag_client.py]
+        RAG_SYS[rag_system.py]
+        VECTOR[ChromaDB<br/>벡터 스토어]
+        EMBED[임베딩<br/>ko-sroberta-multitask]
+        DOCS[PDF 문서<br/>응급처치 매뉴얼]
+        GEMINI_RAG[Gemini API<br/>gemini-2.0-flash]
+        GUIDELINE[맞춤 지침<br/>단계별 안내]
+    end
+    
+    subgraph "Conversational AI"
+        QA[질문 처리<br/>/api/emergency/ask]
+        GEMINI_QA[Gemini API<br/>gemini-2.0-flash]
+        ANSWER[상황 기반 답변]
+    end
+    
+    UI -->|파일 업로드| EP1
+    UI -->|음성/텍스트 질문| EP2
+    EP1 --> FILE
+    FILE --> EXTRACT
+    EXTRACT --> AUDIO
+    AUDIO --> STT
+    AUDIO --> B
+    STT --> A
+    A --> INTENT
+    INTENT --> SPEECH_RESULT
+    B --> CNN
+    CNN --> SOUND_RESULT
+    SPEECH_RESULT --> C
+    SOUND_RESULT --> C
+    C --> GEMINI_FUSION
+    GEMINI_FUSION --> SITUATION
+    SITUATION --> RAG_CLIENT
+    RAG_CLIENT --> RAG_SYS
+    RAG_SYS --> VECTOR
+    VECTOR --> EMBED
+    VECTOR --> DOCS
+    RAG_SYS --> GEMINI_RAG
+    GEMINI_RAG --> GUIDELINE
+    GUIDELINE --> UI
+    EP2 --> QA
+    QA --> GEMINI_QA
+    GEMINI_QA --> ANSWER
+    ANSWER --> UI
+    UI --> TTS
+    
+    style UI fill:#e1f5ff,stroke:#01579b
+    style API fill:#fff4e1,stroke:#e65100
+    style C fill:#ffe1f5,stroke:#880e4f
+    style RAG_SYS fill:#e1ffe1,stroke:#1b5e20
+    style GEMINI_FUSION fill:#f5e1ff,stroke:#4a148c
+    style GEMINI_RAG fill:#f5e1ff,stroke:#4a148c
+    style GEMINI_QA fill:#f5e1ff,stroke:#4a148c`,
+
+            simple: `graph LR
+    A[📁 파일 업로드<br/>음성/영상] --> B[🎤 STT<br/>Whisper]
+    A --> C[🔊 사운드 분석<br/>CNN 모델]
+    B --> D[📝 Module A<br/>음성 분석]
+    C --> E[📊 Module B<br/>사운드 분석]
+    D --> F[🧠 Module C<br/>상황 융합<br/>Gemini API]
+    E --> F
+    F --> G[📚 RAG 시스템<br/>지침 생성<br/>Gemini API]
+    G --> H[💬 대화형 AI<br/>질문-답변<br/>Gemini API]
+    G --> I[📱 사용자<br/>지침 제공]
+    H --> I
+    
+    style A fill:#e3f2fd,stroke:#1976d2,stroke-width:3px
+    style B fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    style C fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    style D fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    style E fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    style F fill:#f3e5f5,stroke:#7b1fa2,stroke-width:3px
+    style G fill:#e8f5e9,stroke:#388e3c,stroke-width:3px
+    style H fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    style I fill:#fff9c4,stroke:#f9a825,stroke-width:3px`,
+
+            pipeline: `flowchart TD
+    START[📁 파일 업로드<br/>mp4 / wav / mp3] --> EXTRACT[🎵 오디오 추출<br/>MoviePy]
+    
+    EXTRACT --> STT[🎤 STT<br/>Whisper<br/>음성 → 텍스트]
+    EXTRACT --> SOUND[🔊 사운드 분석<br/>PyTorch CNN<br/>이벤트 감지]
+    
+    STT --> A[📝 Module A<br/>음성 분석<br/>재난 유형, 긴급도]
+    SOUND --> B[📊 Module B<br/>사운드 분석<br/>낙상/화재/갇힘]
+    
+    A --> C[🧠 Module C<br/>상황 융합<br/>Gemini API]
+    B --> C
+    
+    C --> SITUATION[📋 Situation JSON<br/>S0~S7<br/>긴급도 판단]
+    
+    SITUATION --> RAG[📚 RAG 시스템<br/>문서 검색 + 생성<br/>ChromaDB + Gemini]
+    
+    RAG --> GUIDELINE[✅ 맞춤 지침<br/>단계별 안내]
+    
+    GUIDELINE --> USER[👤 사용자<br/>지침 제공 + TTS]
+    
+    SITUATION --> QA[💬 질문-답변<br/>Gemini API]
+    QA --> USER
+    
+    style START fill:#e3f2fd,stroke:#1976d2,stroke-width:3px
+    style STT fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    style SOUND fill:#fff3e0,stroke:#f57c00,stroke-width:2px
+    style A fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    style B fill:#fce4ec,stroke:#c2185b,stroke-width:2px
+    style C fill:#f3e5f5,stroke:#7b1fa2,stroke-width:3px
+    style SITUATION fill:#e1bee7,stroke:#8e24aa,stroke-width:2px
+    style RAG fill:#e8f5e9,stroke:#388e3c,stroke-width:3px
+    style GUIDELINE fill:#c8e6c9,stroke:#2e7d32,stroke-width:2px
+    style QA fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px
+    style USER fill:#fff9c4,stroke:#f9a825,stroke-width:3px`
+        };
+
+        let currentDiagram = 'full';
+        let currentSvg = null;
+
+        // 다이어그램 렌더링 함수
+        async function renderDiagram(type) {
+            const wrapper = document.getElementById('diagram-wrapper');
+            wrapper.innerHTML = '<div class="loading">다이어그램을 렌더링 중입니다...</div>';
+
+            try {
+                const { svg } = await mermaid.render(`diagram-${type}`, diagrams[type]);
+                wrapper.innerHTML = svg;
+                currentSvg = svg;
+                currentDiagram = type;
+
+                // 버튼 상태 업데이트
+                document.querySelectorAll('.btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                event.target.classList.add('active');
+            } catch (error) {
+                wrapper.innerHTML = `<div class="error">다이어그램 렌더링 오류: ${error.message}</div>`;
+                console.error('Mermaid 렌더링 오류:', error);
+            }
+        }
+
+        // 다이어그램 표시 함수
+        function showDiagram(type) {
+            renderDiagram(type);
+        }
+
+        // 이미지 다운로드 함수
+        function downloadDiagram() {
+            if (!currentSvg) {
+                alert('다이어그램을 먼저 로드해주세요.');
+                return;
+            }
+
+            try {
+                // SVG를 Canvas로 변환
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                const img = new Image();
+                
+                const svgBlob = new Blob([currentSvg], { type: 'image/svg+xml;charset=utf-8' });
+                const url = URL.createObjectURL(svgBlob);
+
+                img.onload = function() {
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    ctx.drawImage(img, 0, 0);
+                    
+                    canvas.toBlob(function(blob) {
+                        const link = document.createElement('a');
+                        link.download = `silversense-architecture-${currentDiagram}.png`;
+                        link.href = URL.createObjectURL(blob);
+                        link.click();
+                        URL.revokeObjectURL(url);
+                        URL.revokeObjectURL(link.href);
+                    });
+                };
+
+                img.onerror = function() {
+                    // SVG 직접 다운로드
+                    const link = document.createElement('a');
+                    link.download = `silversense-architecture-${currentDiagram}.svg`;
+                    link.href = url;
+                    link.click();
+                    setTimeout(() => URL.revokeObjectURL(url), 100);
+                };
+
+                img.src = url;
+            } catch (error) {
+                console.error('다운로드 오류:', error);
+                alert('이미지 다운로드 중 오류가 발생했습니다. SVG로 다운로드를 시도합니다.');
+                
+                // SVG 직접 다운로드
+                const blob = new Blob([currentSvg], { type: 'image/svg+xml;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.download = `silversense-architecture-${currentDiagram}.svg`;
+                link.href = url;
+                link.click();
+                setTimeout(() => URL.revokeObjectURL(url), 100);
+            }
+        }
+
+        // 페이지 로드 시 첫 번째 다이어그램 렌더링
+        window.addEventListener('load', () => {
+            renderDiagram('full');
+        });
+    </script>
+</body>
+</html>
+
