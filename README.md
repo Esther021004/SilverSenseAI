@@ -2,6 +2,10 @@
 
 응급 상황을 자동으로 감지하고 분석하여 실시간 대처 지침을 제공하는 AI 기반 응급 지원 시스템입니다.
 
+## SilverSense AI Architecture Viewer
+https://20251203.netlify.app/
+("SilverSense AI의 시스템 아키텍처를 시각화한 아키텍처 뷰어입니다.")
+
 ## 📋 프로젝트 개요
 
 SilverSense AI는 음성(STT), 사운드 이벤트, 환경 신호를 종합 분석하여 응급 상황의 심각도를 판단하고, 혼자 있는 고령층을 위한 맞춤형 대처 지침을 생성합니다.
@@ -343,4 +347,5 @@ python test_stt.py temp_media/test_audio.wav
 - Module A: 음성 분석
 - Module B: 사운드 분석  
 - Module C: 상황 융합 및 RAG
+
 
