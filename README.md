@@ -344,8 +344,10 @@ python test_stt.py temp_media/test_audio.wav
 
 ## 👥 기여자
 
-- Module A: 음성 분석
-- Module B: 사운드 분석  
-- Module C: 상황 융합 및 RAG
+- Module A: 음성 분석 - 조예진
+- Module B: 사운드 분석 - 김수빈
+- Module C: 상황 융합 - 문혜원
+- RAG 지침 생성 - 문혜원
+
 
 
